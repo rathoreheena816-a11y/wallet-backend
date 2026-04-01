@@ -1,47 +1,37 @@
-const express = require('express');
-const cors = require('cors');
-const { Keypair } = require('@solana/web3.js');
+const express = require("express");
+const cors = require("cors");
+const { Keypair } = require("@solana/web3.js");
 
 const app = express();
 
-app.use(cors());
+// ✅ IMPORTANT CORS FIX
+app.use(cors({
+  origin: "*",   // allow all (FlutterFlow ke liye)
+  methods: ["GET", "POST"],
+}));
+
 app.use(express.json());
 
-// ✅ GET route (browser + fallback)
-app.get('/wallet/create', (req, res) => {
-  try {
-    const keypair = Keypair.generate();
+// ✅ BOTH GET + POST (important)
+app.get("/wallet/create", (req, res) => {
+  const keypair = Keypair.generate();
 
-    res.json({
-      publicKey: keypair.publicKey.toString(),
-      secretKey: Array.from(keypair.secretKey),
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Wallet creation failed",
-    });
-  }
+  res.json({
+    publicKey: keypair.publicKey.toString(),
+    secretKey: Array.from(keypair.secretKey),
+  });
 });
 
-// ✅ POST route (FlutterFlow)
-app.post('/wallet/create', (req, res) => {
-  try {
-    const keypair = Keypair.generate();
+app.post("/wallet/create", (req, res) => {
+  const keypair = Keypair.generate();
 
-    res.json({
-      publicKey: keypair.publicKey.toString(),
-      secretKey: Array.from(keypair.secretKey),
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Wallet creation failed",
-    });
-  }
+  res.json({
+    publicKey: keypair.publicKey.toString(),
+    secretKey: Array.from(keypair.secretKey),
+  });
 });
 
-// ✅ Railway port fix
+// ✅ PORT FIX
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
