@@ -1,6 +1,7 @@
 const express = require("express");
 const { Keypair } = require("@solana/web3.js");
 const { createClient } = require("@supabase/supabase-js");
+const QRCode = require("qrcode");
 
 const app = express();
 
