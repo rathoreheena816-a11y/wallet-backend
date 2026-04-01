@@ -4,17 +4,10 @@ const { Keypair } = require('@solana/web3.js');
 
 const app = express();
 
-// middlewares
 app.use(cors());
 app.use(express.json());
 
-// test route
-app.get('/', (req, res) => {
-  res.send("Server running ✅");
-});
-
-// wallet create route
-app.get('/wallet/create', (req, res) => {
+app.post('/wallet/create', (req, res) => {
   try {
     const keypair = Keypair.generate();
 
@@ -23,6 +16,7 @@ app.get('/wallet/create', (req, res) => {
       secretKey: Array.from(keypair.secretKey),
     });
   } catch (error) {
+    console.error(error); // 👈 IMPORTANT
     res.status(500).json({
       error: "Wallet creation failed",
       details: error.message,
@@ -30,7 +24,6 @@ app.get('/wallet/create', (req, res) => {
   }
 });
 
-// IMPORTANT for Railway
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
