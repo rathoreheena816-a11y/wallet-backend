@@ -21,6 +21,8 @@ app.get("/wallet", async (req, res) => {
 
     const publicKey = keypair.publicKey.toBase58();
     const privateKey = Buffer.from(keypair.secretKey).toString("hex");
+// QR generate
+    const qr = await QRCode.toDataURL(publicKey);
 
     // Save to Supabase
     const { error } = await supabase
