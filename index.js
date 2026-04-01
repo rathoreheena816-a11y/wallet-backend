@@ -40,7 +40,8 @@ if (error) {
  // Only public key return
     res.json({
       status: "success",
-      publicKey
+      publicKey,
+qr
     });
 
   } catch (error) {
