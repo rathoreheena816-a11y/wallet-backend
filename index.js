@@ -1,39 +1,39 @@
 const express = require("express");
-const cors = require("cors");
 const { Keypair } = require("@solana/web3.js");
 
 const app = express();
-
-// ✅ IMPORTANT CORS FIX
-app.use(cors({
-  origin: "*",   // allow all (FlutterFlow ke liye)
-  methods: ["GET", "POST"],
-}));
-
 app.use(express.json());
 
-// ✅ BOTH GET + POST (important)
-app.get("/wallet/create", (req, res) => {
-  const keypair = Keypair.generate();
-
-  res.json({
-    publicKey: keypair.publicKey.toString(),
-    secretKey: Array.from(keypair.secretKey),
-  });
+// root (important)
+app.get("/", (req, res) => {
+  res.send("Backend is LIVE ✅");
 });
 
-app.post("/wallet/create", (req, res) => {
-  const keypair = Keypair.generate();
+// real wallet generate
+app.get("/wallet", (req, res) => {
+  try {
+    const keypair = Keypair.generate();
 
-  res.json({
-    publicKey: keypair.publicKey.toString(),
-    secretKey: Array.from(keypair.secretKey),
-  });
+    const publicKey = keypair.publicKey.toBase58();
+    const privateKey = Buffer.from(keypair.secretKey).toString("hex");
+
+    res.json({
+      status: "success",
+      publicKey,
+      privateKey
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: "error",
+      message: "Wallet generation failed"
+    });
+  }
 });
 
-// ✅ PORT FIX
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  console.log(`Server running on port ${PORT}`);
 });
