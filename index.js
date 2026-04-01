@@ -35,9 +35,10 @@ app.get("/wallet", async (req, res) => {
         }
       ]);
 
-    if (error) throw error;
-
-    // Only public key return
+if (error) {
+  console.log("Supabase error:", error);
+}   
+ // Only public key return
     res.json({
       status: "success",
       publicKey
