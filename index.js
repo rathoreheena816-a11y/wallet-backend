@@ -7,6 +7,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ GET route (browser + fallback)
+app.get('/wallet/create', (req, res) => {
+  try {
+    const keypair = Keypair.generate();
+
+    res.json({
+      publicKey: keypair.publicKey.toString(),
+      secretKey: Array.from(keypair.secretKey),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Wallet creation failed",
+    });
+  }
+});
+
+// ✅ POST route (FlutterFlow)
 app.post('/wallet/create', (req, res) => {
   try {
     const keypair = Keypair.generate();
@@ -16,14 +34,14 @@ app.post('/wallet/create', (req, res) => {
       secretKey: Array.from(keypair.secretKey),
     });
   } catch (error) {
-    console.error(error); // 👈 IMPORTANT
+    console.error(error);
     res.status(500).json({
       error: "Wallet creation failed",
-      details: error.message,
     });
   }
 });
 
+// ✅ Railway port fix
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
