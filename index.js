@@ -6,10 +6,9 @@ const app = express();
 
 // 🔐 Supabase connection
 const supabase = createClient(
-  "https://uruopjtgggfjeqdyqrqz.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVydW9wanRnZ2dmZWpxZHlycXpwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDY4NzEwNiwiZXhwIjoyMDkwMjYzMTA2fQ.Bw_kLmXnFNtv0LkdOePHRvnzeUr46oorcZHg3iGHOcs"
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
 );
-
 // Root
 app.get("/", (req, res) => {
   res.send("Backend is LIVE ✅");
